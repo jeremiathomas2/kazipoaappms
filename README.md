@@ -26,37 +26,6 @@ Kazipoa features a unique real-time customization engine:
 - **Animation Control**: Fine-tune transition speeds and card hover behaviors.
 - **Dynamic Themes**: Fully persistent Light and Dark modes with zero-flicker page loads.
 
-## 🔑 Administrative Access
-
-To access the management dashboard:
-- **URL**: `/login`
-- **Default Email**: `admin@kazipoa.com`
-- **Default Password**: `password`
-
-## 📦 Installation & Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/jeremiathomas2/kazipoaappms.git
-   ```
-2. **Install Dependencies**:
-   ```bash
-   composer install
-   npm install && npm run build
-   ```
-3. **Environment Setup**:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-4. **Database & Seeding**:
-   ```bash
-   php artisan migrate --seed --class=KazipoaSeeder
-   ```
-5. **Run Server**:
-   ```bash
-   php artisan serve
-   ```
 
 ---
 © 2026 **Kazipoa** — Smart Service Marketplace · Tanzania
