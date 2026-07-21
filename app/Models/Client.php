@@ -9,6 +9,7 @@ class Client extends Model
     protected $fillable = [
         'name',
         'contact',
+        'email',
         'region',
         'bookings_count',
         'last_active',

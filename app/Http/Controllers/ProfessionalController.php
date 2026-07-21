@@ -39,4 +39,61 @@ class ProfessionalController extends Controller
 
         return view('pages.professionals', compact('professionals', 'services', 'regions'));
     }
+
+    public function create()
+    {
+        return view('pages.professionals');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'service' => 'required|string',
+            'region' => 'required|string',
+            'rating' => 'nullable|numeric',
+            'jobs_count' => 'nullable|integer',
+            'is_verified' => 'boolean',
+            'avatar_color' => 'nullable|string',
+            'status' => 'required|string|in:available,in_session,starting_soon',
+        ]);
+
+        Professional::create($validated);
+
+        return back()->with('success', 'Professional added successfully!');
+    }
+
+    public function show(Professional $professional)
+    {
+        return view('pages.professionals', compact('professional'));
+    }
+
+    public function edit(Professional $professional)
+    {
+        return view('pages.professionals', compact('professional'));
+    }
+
+    public function update(Request $request, Professional $professional)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'service' => 'required|string',
+            'region' => 'required|string',
+            'rating' => 'nullable|numeric',
+            'jobs_count' => 'nullable|integer',
+            'is_verified' => 'boolean',
+            'avatar_color' => 'nullable|string',
+            'status' => 'required|string|in:available,in_session,starting_soon',
+        ]);
+
+        $professional->update($validated);
+
+        return back()->with('success', 'Professional updated successfully!');
+    }
+
+    public function destroy(Professional $professional)
+    {
+        $professional->delete();
+        return back()->with('success', 'Professional deleted successfully!');
+    }
 }

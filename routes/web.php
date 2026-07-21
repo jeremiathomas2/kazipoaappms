@@ -23,8 +23,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('bookings', BookingController::class);
+        Route::post('/bookings/{booking}/accept', [BookingController::class, 'accept'])->name('bookings.accept');
+        Route::post('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.status');
     Route::resource('professionals', ProfessionalController::class);
     Route::resource('clients', ClientController::class);
+    Route::resource('users', UserController::class);
     
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -40,6 +43,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+    Route::get('/chat/messages/{receiverId}', [ChatController::class, 'getMessages'])->name('chat.messages');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
     
     // Reports
@@ -56,7 +61,10 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/suspensions', [UserController::class, 'suspensions'])->name('suspensions');
+        Route::post('/{user}/suspend', [UserController::class, 'suspend'])->name('suspend');
+        Route::post('/{user}/unsuspend', [UserController::class, 'unsuspend'])->name('unsuspend');
         Route::get('/verifications', [UserController::class, 'verifications'])->name('verifications');
+        Route::post('/{user}/verify', [UserController::class, 'verify'])->name('verify');
     });
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

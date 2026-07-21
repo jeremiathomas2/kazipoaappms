@@ -9,16 +9,9 @@
             <div class="page-subtitle">Manage all client bookings, recurring schedules and rescheduling requests.</div>
         </div>
         <div class="page-header-actions">
-            <select class="form-control" style="width:auto;padding:8px 12px;font-size:13px">
-                <option>All Status</option>
-                <option>Pending</option>
-                <option>Accepted</option>
-                <option>Active</option>
-                <option>Completed</option>
-            </select>
-            <button class="btn btn-primary btn-sm" onclick="openModal('New Booking','booking')">
-                <i class="fa fa-plus"></i> New Booking
-            </button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('New Booking','booking')">
+            <i class="fa fa-plus"></i> New Booking
+          </button>
         </div>
     </div>
 
@@ -41,65 +34,160 @@
         </div>
     </div>
 
-    <div class="grid-3" style="margin-bottom:20px">
-        @foreach($bookings->take(3) as $booking)
-        <div class="booking-card">
-            <div class="booking-card-header">
-                <div><div class="booking-id">#BK-{{ $booking->id }}</div><div class="booking-title">{{ $booking->service_type }}</div></div>
-                <span class="badge badge-{{ $booking->status == 'pending' ? 'warning' : ($booking->status == 'active' ? 'success' : 'primary') }}">
-                    {{ ucfirst($booking->status) }}
-                </span>
-            </div>
-            <div class="booking-meta">
-                <div class="booking-meta-item"><i class="fa fa-user"></i> {{ $booking->client->name }}</div>
-                <div class="booking-meta-item"><i class="fa fa-user-tie"></i> {{ $booking->professional->name ?? 'Unassigned' }}</div>
-                <div class="booking-meta-item"><i class="fa fa-map-marker-alt"></i> {{ $booking->location }}</div>
-                <div class="booking-meta-item"><i class="fa fa-calendar"></i> {{ $booking->date }} {{ $booking->time }}</div>
-                <div class="booking-meta-item"><i class="fa fa-repeat"></i> {{ ucfirst($booking->type) }}</div>
-            </div>
-            <div class="booking-actions">
-                @if($booking->status == 'pending')
-                <button class="btn btn-success btn-sm" onclick="showToast('Booking assigned!','success')"><i class="fa fa-check"></i> Accept</button>
-                @endif
-                <button class="btn btn-secondary btn-sm"><i class="fa fa-eye"></i> View</button>
+    <!-- Filter Bar -->
+    <form action="{{ route('bookings.index') }}" method="GET" class="filter-bar" id="filterForm">
+        <div class="filter-item" style="flex: 2;">
+            <div class="header-search" style="max-width: none; border-radius: 8px;">
+                <i class="fa fa-search"></i>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by client, service, location..." onchange="this.form.submit()"/>
             </div>
         </div>
-        @endforeach
-    </div>
+        <div class="filter-item">
+            <select name="professional_id" class="form-control" onchange="this.form.submit()">
+                <option value="">All Professionals</option>
+                @foreach($professionals as $pro)
+                    <option value="{{ $pro->id }}" {{ request('professional_id') == $pro->id ? 'selected' : '' }}>{{ $pro->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="filter-item">
+            <select name="status" class="form-control" onchange="this.form.submit()">
+                <option value="">All Status</option>
+                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="accepted" {{ request('status') == 'accepted' ? 'selected' : '' }}>Accepted</option>
+                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <select name="type" class="form-control" onchange="this.form.submit()">
+                <option value="">All Types</option>
+                <option value="one-time" {{ request('type') == 'one-time' ? 'selected' : '' }}>One-time</option>
+                <option value="weekly" {{ request('type') == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                <option value="monthly" {{ request('type') == 'monthly' ? 'selected' : '' }}>Monthly</option>
+            </select>
+        </div>
+    </form>
 
     <!-- Bookings Table -->
     <div class="card">
         <div class="card-header">
             <div class="card-title">All Bookings</div>
-            <div style="display:flex;gap:8px">
-                <input type="text" class="form-control" style="width:200px;padding:7px 12px;font-size:12.5px" placeholder="Search bookings…"/>
-            </div>
         </div>
         <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th><th>Client</th><th>Service</th><th>Pro</th><th>Location</th>
-                        <th>Date</th><th>Type</th><th>Status</th><th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($bookings as $booking)
-                    <tr>
-                        <td>#{{ $booking->id }}</td>
-                        <td>{{ $booking->client->name }}</td>
-                        <td>{{ $booking->service_type }}</td>
-                        <td>{{ $booking->professional->name ?? '—' }}</td>
-                        <td>{{ $booking->location }}</td>
-                        <td>{{ $booking->date }}</td>
-                        <td><span class="badge badge-info">{{ ucfirst($booking->type) }}</span></td>
-                        <td><span class="badge badge-{{ $booking->status == 'pending' ? 'warning' : ($booking->status == 'active' ? 'success' : ($booking->status == 'completed' ? 'success' : 'primary')) }}">{{ ucfirst($booking->status) }}</span></td>
-                        <td><button class="btn btn-secondary btn-sm">View</button></td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Client</th><th>Service</th><th>Pro</th><th>Location</th>
+                <th>Date</th><th>Type</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($bookings as $booking)
+              <tr>
+                <td>#{{ $booking->id }}</td>
+                <td>{{ $booking->client->name }}</td>
+                <td>{{ $booking->service_type }}</td>
+                <td>{{ $booking->professional->name ?? '—' }}</td>
+                <td>{{ $booking->location }}</td>
+                <td>{{ $booking->date }} {{ $booking->time }}</td>
+                <td><span class="badge badge-info">{{ ucfirst($booking->type) }}</span></td>
+                <td>
+                  <form action="{{ route('bookings.status', $booking) }}" method="POST" style="display:inline">
+                    @csrf
+                    <select name="status" class="form-control form-control-sm" style="width:auto;padding:4px 8px;font-size:12px" onchange="this.form.submit()">
+                      <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                      <option value="accepted" {{ $booking->status == 'accepted' ? 'selected' : '' }}>Accepted</option>
+                      <option value="active" {{ $booking->status == 'active' ? 'selected' : '' }}>Active</option>
+                      <option value="completed" {{ $booking->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                    </select>
+                  </form>
+                </td>
+                <td style="display:flex;gap:4px;flex-wrap:wrap">
+                  <button class="btn btn-secondary btn-sm" onclick="openViewModal({{ json_encode($booking) }})">
+                    <i class="fa fa-eye"></i> View
+                  </button>
+                  <button class="btn btn-secondary btn-sm" onclick="openModal('Edit Booking', 'booking', {{ json_encode($booking) }})">
+                    <i class="fa fa-edit"></i> Edit
+                  </button>
+                  <form action="{{ route('bookings.destroy', $booking) }}" method="POST" style="display:inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this booking?')">
+                      <i class="fa fa-trash"></i> Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
     </div>
 </div>
+
+<!-- View Booking Modal -->
+<div class="modal-overlay" id="viewBookingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="viewModalTitle">Booking Details</div>
+      <button class="modal-close" onclick="closeViewModal()"><i class="fa fa-times"></i></button>
+    </div>
+    <div id="viewModalBody" style="padding: 20px;">
+    </div>
+  </div>
+</div>
+
+<script>
+function openViewModal(booking) {
+  const modalBody = document.getElementById('viewModalBody');
+  modalBody.innerHTML = `
+    <div style="display:grid;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">#BK-${booking.id} - ${booking.service_type}</h3>
+        <span class="badge badge-${booking.status == 'pending' ? 'warning' : booking.status == 'active' ? 'success' : 'primary'}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+        <div>
+          <strong style="display:block;margin-bottom:4px;color:var(--text-muted);font-size:12px">Client</strong>
+          <span style="font-weight:600">${booking.client ? booking.client.name : 'N/A'}</span>
+        </div>
+        <div>
+          <strong style="display:block;margin-bottom:4px;color:var(--text-muted);font-size:12px">Professional</strong>
+          <span style="font-weight:600">${booking.professional ? booking.professional.name : 'Unassigned'}</span>
+        </div>
+        <div>
+          <strong style="display:block;margin-bottom:4px;color:var(--text-muted);font-size:12px">Date</strong>
+          <span style="font-weight:600">${booking.date}</span>
+        </div>
+        <div>
+          <strong style="display:block;margin-bottom:4px;color:var(--text-muted);font-size:12px">Time</strong>
+          <span style="font-weight:600">${booking.time}</span>
+        </div>
+        <div>
+          <strong style="display:block;margin-bottom:4px;color:var(--text-muted);font-size:12px">Location</strong>
+          <span style="font-weight:600">${booking.location}</span>
+        </div>
+        <div>
+          <strong style="display:block;margin-bottom:4px;color:var(--text-muted);font-size:12px">Type</strong>
+          <span class="badge badge-info" style="display:inline-block">${booking.type.charAt(0).toUpperCase() + booking.type.slice(1)}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('viewBookingModal').classList.add('open');
+}
+
+function closeViewModal() {
+  document.getElementById('viewBookingModal').classList.remove('open');
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  const viewModal = document.getElementById('viewBookingModal');
+  if (e.target === viewModal) {
+    closeViewModal();
+  }
+});
+</script>
 @endsection

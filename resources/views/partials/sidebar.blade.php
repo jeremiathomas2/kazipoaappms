@@ -14,14 +14,14 @@
       <!-- Main -->
       <div class="sidebar-section-title">Main</div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}" onclick="navigateTo('dashboard',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
         <a href="{{ route('dashboard') }}">
           <i class="fa fa-th-large nav-icon"></i>
           <span class="sidebar-label">Dashboard</span>
         </a>
       </div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('bookings.*') ? 'active' : '' }}" onclick="navigateTo('bookings',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('bookings.*') ? 'active' : '' }}">
         <a href="{{ route('bookings.index') }}">
           <i class="fa fa-calendar-check nav-icon"></i>
           <span class="sidebar-label">Bookings</span>
@@ -43,21 +43,21 @@
         </div>
       </div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('professionals.*') ? 'active' : '' }}" onclick="navigateTo('professionals',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('professionals.*') ? 'active' : '' }}">
         <a href="{{ route('professionals.index') }}">
           <i class="fa fa-user-tie nav-icon"></i>
           <span class="sidebar-label">Professionals</span>
         </a>
       </div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('clients.*') ? 'active' : '' }}" onclick="navigateTo('clients',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('clients.*') ? 'active' : '' }}">
         <a href="{{ route('clients.index') }}">
           <i class="fa fa-users nav-icon"></i>
           <span class="sidebar-label">Clients</span>
         </a>
       </div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('chat.*') ? 'active' : '' }}" id="navChat" onclick="navigateTo('chat',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('chat.*') ? 'active' : '' }}" id="navChat">
         <a href="{{ route('chat.index') }}">
           <i class="fa fa-comment-dots nav-icon"></i>
           <span class="sidebar-label">Chat</span>
@@ -68,7 +68,7 @@
       <!-- Analytics -->
       <div class="sidebar-section-title">Analytics</div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}" onclick="navigateTo('analytics',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
         <a href="{{ route('analytics.index') }}">
           <i class="fa fa-chart-line nav-icon"></i>
           <span class="sidebar-label">Analytics</span>
@@ -92,7 +92,7 @@
       <!-- System -->
       <div class="sidebar-section-title">System</div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('schedule.*') ? 'active' : '' }}" id="navSchedule" onclick="navigateTo('schedule',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('schedule.*') ? 'active' : '' }}" id="navSchedule">
         <a href="{{ route('schedule.index') }}">
           <i class="fa fa-calendar-days nav-icon"></i>
           <span class="sidebar-label">Scheduling</span>
@@ -112,7 +112,7 @@
         </div>
       </div>
 
-      <div class="sidebar-nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}" onclick="navigateTo('settings',this)">
+      <div class="sidebar-nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
         <a href="{{ route('settings.index') }}">
           <i class="fa fa-gear nav-icon"></i>
           <span class="sidebar-label">Settings</span>
